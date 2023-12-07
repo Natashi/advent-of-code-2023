@@ -8,6 +8,9 @@ mod day_3;
 mod day_4;
 mod day_5;
 mod day_6;
+mod day_7;
+mod day_8;
+mod day_9;
 
 fn main() {
 	let argv: Vec<String> = env::args().collect();
@@ -29,6 +32,9 @@ fn main() {
 		4 => day_4::solve(&file),
 		5 => day_5::solve(&file),
 		6 => day_6::solve(&file),
+		7 => day_7::solve(&file),
+		8 => day_8::solve(&file),
+		9 => day_9::solve(&file),
 		_ => panic!(),
 	}
 }
