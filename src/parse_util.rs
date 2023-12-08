@@ -6,9 +6,11 @@ use nom::{
 	Parser,
 	error::ParseError,
 	
-	sequence::delimited,
+	multi::*,
+	sequence::*,
+	combinator::*,
 	bytes::complete::*,
-	character::complete::multispace0,
+	character::complete::*,
 };
 
 pub fn read_file_to_string(file: &File) -> String {
@@ -42,5 +44,16 @@ pub fn paren<'a, F, O, E: ParseError<&'a str>>(inner: F) -> impl Parser<&'a str,
 		tag("("),
 		inner,
 		tag(")"),
+	)
+}
+
+pub fn lines<'a, F, O, E: ParseError<&'a str>>(inner: F) -> impl Parser<&'a str, Vec<O>, E>
+	where
+	F: Parser<&'a str, O, E>,
+{
+	many1(
+		terminated(
+			inner, 
+			opt(line_ending))
 	)
 }
