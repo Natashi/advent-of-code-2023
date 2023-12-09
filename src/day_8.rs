@@ -3,11 +3,12 @@ use std::collections::HashMap;
 
 use nom::{
 	IResult, Parser,
-	branch, combinator, sequence, multi,
+	sequence,
 	character::complete::*,
 	bytes::complete::*,
 };
-use crate::parse_util;
+use crate::util;
+use crate::util::parse;
 
 #[derive(Debug, Clone)]
 struct Node {
@@ -37,11 +38,12 @@ impl Directions {
 		let mut node_now = start;
 		
 		while !pred(node_now) {
-			let walk = cycle.next().unwrap();
-			let next = match walk {
-				'L'	=> self.nodes.get(&node_now.left),
-				_	=> self.nodes.get(&node_now.right),
-			}.unwrap();
+			let next = self.nodes.get(
+				match cycle.next().unwrap() {
+					'L'	=> &node_now.left,
+					_	=> &node_now.right,
+				}
+			).unwrap();
 			
 			step += 1;
 			node_now = next;
@@ -89,7 +91,7 @@ fn read_input(file: &File) -> Directions {
 			alphanumeric1, 
 			tag(" = ")
 		)(s)?;
-		let (s, (left, right)) = parse_util::paren(
+		let (s, (left, right)) = parse::paren(
 			sequence::separated_pair(
 				alphanumeric1, 
 				tag(", "),
@@ -105,7 +107,7 @@ fn read_input(file: &File) -> Directions {
 	fn take_file(s: &str) -> IResult<&str, Directions> {
 		let (s, cycle) = sequence::terminated(
 			take_rl, multispace0)(s)?;
-		let (s, nodes) = parse_util::lines(
+		let (s, nodes) = parse::lines(
 			take_node).parse(s)?;
 		
 		Ok((s, Directions { 
@@ -118,7 +120,7 @@ fn read_input(file: &File) -> Directions {
 		}))
 	}
 	
-	let source = parse_util::read_file_to_string(file);
+	let source = util::read_file_to_string(file);
 	take_file(&source).unwrap().1
 }
 

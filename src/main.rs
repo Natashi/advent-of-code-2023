@@ -2,7 +2,7 @@ use std::env;
 use std::process::exit;
 use std::fs::File;
 
-mod parse_util;
+mod util;
 
 mod day_1;
 mod day_2;
