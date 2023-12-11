@@ -7,7 +7,7 @@ pub fn read_file_to_string(file: &File) -> String {
 	read.read_to_string(&mut s).unwrap();
 	s
 }
-pub fn read_file_lines_to_string(file: &File) -> Vec<String> {
+pub fn read_file_lines(file: &File) -> Vec<String> {
 	BufReader::new(file).lines()
 		.flatten()
 		.collect::<Vec<_>>()

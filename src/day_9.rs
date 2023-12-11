@@ -40,7 +40,7 @@ fn sequence_predict_back(sequence: &Vec<i32>) -> i32 {
 }
 
 pub fn solve(file: &File) {
-	let sequences = util::read_file_lines_to_string(file).iter()
+	let sequences = util::read_file_lines(file).iter()
 		.map(|x| {
 			x.split_ascii_whitespace()
 				.map(|x| x.parse::<i32>().unwrap())
