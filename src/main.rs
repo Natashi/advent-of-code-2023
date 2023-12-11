@@ -2,17 +2,16 @@ use std::env;
 use std::process::exit;
 use std::fs::File;
 
+use seq_macro::seq;
+use paste::paste;
+
 mod util;
 
-mod day_1;
-mod day_2;
-mod day_3;
-mod day_4;
-mod day_5;
-mod day_6;
-mod day_7;
-mod day_8;
-mod day_9;
+seq!(D in 1..=25 {
+	paste! {
+		mod [<day_ D>];
+	}
+});
 
 fn main() {
 	let argv: Vec<String> = env::args().collect();
@@ -27,16 +26,22 @@ fn main() {
 	
 	let file = File::open(path).unwrap();
 	
-	match day {
-		1 => day_1::solve(&file),
-		2 => day_2::solve(&file),
-		3 => day_3::solve(&file),
-		4 => day_4::solve(&file),
-		5 => day_5::solve(&file),
-		6 => day_6::solve(&file),
-		7 => day_7::solve(&file),
-		8 => day_8::solve(&file),
-		9 => day_9::solve(&file),
-		_ => panic!(),
+	// Horrid
+	macro_rules! day_matches {
+		( $( $x:literal ),* ) => {
+			{
+				paste! {
+					match day {
+						$( $x => [<day_ $x>]::solve(&file), )*
+						_ => unreachable!(),
+					}
+				}
+			}
+		};
 	}
+	day_matches!(
+		1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 
+		11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
+		21, 22, 23, 24, 25
+	);
 }
