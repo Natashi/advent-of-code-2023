@@ -30,10 +30,9 @@ impl Universe {
 		let width = lines[0].len();
 		
 		let galaxy_map = lines.iter().enumerate()
-			.map(|(y, line)| line.chars().enumerate()
+			.flat_map(|(y, line)| line.chars().enumerate()
 				.filter(|(_, c)| *c == '#')
 				.map(move |(x, _)| Galaxy { x, y }))
-			.flatten()
 			.collect::<Vec<_>>();
 		
 		let expansions = {
@@ -41,12 +40,12 @@ impl Universe {
 				.filter(|x| !galaxy_map.iter()
 					.map(|g| g.x)
 					.contains(x))
-				.map(|x| Expansion::X(x));
+				.map(Expansion::X);
 			let expand_y = (0..height)
 				.filter(|y| !galaxy_map.iter()
 					.map(|g| g.y)
 					.contains(y))
-				.map(|y| Expansion::Y(y));
+				.map(Expansion::Y);
 			expand_x.chain(expand_y).collect::<Vec<_>>()
 		};
 		
